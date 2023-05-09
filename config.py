@@ -6,3 +6,4 @@ class Config(object):
     API_HASH = os.environ.get("API_HASH")
     TO_CHANNEL = int(os.environ.get("CHANNEL_ID"))
     FROM_CHANNEL = int(os.environ.get("FROM_CHANNEL"))
+    START_FROM = int(os.environ.get("START_FROM",0))
