@@ -1,6 +1,7 @@
 import os
 import time
-
+import asyncio
+import datetime
 from config import Config
 
 from pyrogram.errors import FloodWait
@@ -41,9 +42,9 @@ async def forward(bot, update):
         try:
             start_time = datetime.datetime.now()
             txt = await update.reply_text(text="Forward Started!")
-            txt = await bot.send_message(Config.FROM_CHANNEL, ".")
-            last_msg_id = txt.message_id
-            await txt.delete()
+            text = await bot.send_message(Config.FROM_CHANNEL, ".")
+            last_msg_id = text.message_id
+            await text.delete()
             success = 0
             fail = 0
             total = 0
@@ -58,13 +59,13 @@ async def forward(bot, update):
                             success+=1
                         except Exception as e:
                             fail+=1
-                            await bot.send_message(f"this msg_id {message.message_id} give error {e}")
+                            await bot.send_message(update.from_user.id,f"this msg_id {message.message_id} give error {e}")
                             time.sleep(2)
                     else:
                         empty+=1
                     total+=1
                     
-                    if total % 10 == 0:
+                    if total % 5 == 0:
                         msg = f"Batch forwarding in Process !\n\nTotal: {total}\nSuccess: {success}\nFailed: {fail}\nEmpty: {empty}"
                         await txt.edit((msg))
                     time.sleep(2)
@@ -73,7 +74,7 @@ async def forward(bot, update):
             time.sleep(e.x)
     
     except Exception as e:
-        await bot.reply_text(f"{e}")
+        await txt.reply_text(f"{e}")
     
     finally:
         end_time = datetime.datetime.now()
